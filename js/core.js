@@ -17,7 +17,7 @@
   HS.defaults = () => ({
     step: 'pick',
     settings: {
-      academy: '고래영어학원',
+      academy: '우리학원',
       title: '2027 예비고1 고교선택 설명회',
       date: '11월 8일 토요일',
       seats: '학부모 40석',
