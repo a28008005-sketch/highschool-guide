@@ -43,6 +43,8 @@
   }
 
   function render() {
+    // 담은 학교마다 해설 칸을 만들어 둔다 — 확인된 평가계획이 있으면 이때 채워진다
+    HS.pickedSchools(state).forEach(sc => HS.note(state, sc.id));
     renderChrome();
     const fn = { pick: viewPick, notes: viewNotes, copy: viewCopy, present: viewPresent, compare: viewCompare, handout: viewHandout, export: viewExport }[state.step] || viewPick;
     view.className = 'v-' + state.step;
@@ -146,6 +148,7 @@
       <div class="card-sub">${esc([s.sigungu, s.fond, s.coed === '공학' ? '남녀공학' : s.coed ? s.coed + '학교' : '', typeLabel(s.type)].filter(Boolean).join(' · '))}</div>
       <div class="card-k"><b>${k}</b><span>명<br>1등급 자리</span>
         <div class="card-g1">1학년 <b>${s.g1}</b>명${s.c1 ? `<br>${s.c1}학급 · 학급당 ${(s.g1 / s.c1).toFixed(1)}명` : ''}</div></div>
+      ${HS.knownPlan(s.id) ? `<span class="plan-badge">영어 평가계획 확인됨 · 서·논술 ${HS.knownPlan(s.id).essay}% · 수행 ${HS.knownPlan(s.id).perf}%</span>` : ''}
       ${s.sid ? `<a class="card-link" href="${HS.infoUrl(s)}" target="_blank" rel="noopener">학교알리미 공시 · 평가계획 ↗</a>` : ''}
       <div class="mini">${[['1', s.g1], ['2', s.g2], ['3', s.g3]].map(([g, v]) => `<div><span>${g}학년</span><i style="width:${(v / max) * 100}%"></i><b>${v || '-'}</b></div>`).join('')}</div>
     </article>`;

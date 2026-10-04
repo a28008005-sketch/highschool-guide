@@ -72,8 +72,26 @@
     const n = state.notes[id];
     // 평가계획(학교알리미 「교과별 교수·학습 및 평가계획」 공시) — 나중에 생긴 칸이라 따로 채운다
     if (!n.plan) n.plan = { w1: '', w2: '', perf: '', essay: '', tasks: [{ name: '', w: '', how: '' }], src: '' };
+    // 확인된 평가계획(data/plans.js)이 있으면 비어 있는 칸만 채운다
+    const known = HS.knownPlan(id);
+    if (known && !+n.plan.w1 && !+n.plan.perf) {
+      n.plan = {
+        w1: String(known.w1), w2: String(known.w2), perf: String(known.perf), essay: String(known.essay || ''),
+        when: known.when || '', note: known.note || '',
+        tasks: known.tasks.map(([name, w, how]) => ({ name, w: String(w), how })),
+        src: PLANS.src,
+      };
+      if (!n.type && !n.value) {
+        n.subject = PLANS.subject;
+        n.type = '서·논술형';
+        n.value = known.essay + '%';
+        n.when = '1학기 정기시험';
+      }
+    }
     return n;
   };
+  const PLANS = window.SCHOOL_PLANS || { schools: {} };
+  HS.knownPlan = id => PLANS.schools[id] || null;
   // 학교알리미 학교별 공시 페이지 — 「교과별(학년별) 교수·학습 및 평가계획」 이 여기 있다
   HS.infoUrl = s => (s && s.sid ? `https://www.schoolinfo.go.kr/ei/ss/Pneiss_b01_s0.do?SHL_IDF_CD=${s.sid}` : '');
   HS.hasExam = n => n && n.type && n.value;

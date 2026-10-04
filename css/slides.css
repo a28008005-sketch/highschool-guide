@@ -125,3 +125,12 @@
 .sl-tasks span { font-size: 15px; padding: 5px 12px; border-radius: 99px; background: #fbe9e4; color: #8a3520; }
 .sl-tasks b { font-weight: 800; }
 .sl-src { font-size: 13px; color: var(--muted); margin: 18px 0 0; }
+.sl-when { font-size: 14px; color: var(--muted); }
+.k-plan .sl-head { margin-bottom: 16px; }
+.sl-plans.n4 { gap: 10px; }
+.sl-plans.n4 .sl-plan-h { margin-bottom: 4px; }
+.sl-plans.n4 .sl-plan-h strong { font-size: 22px; }
+.sl-plans.n4 .sl-stack { height: 32px; }
+.sl-plans.n4 .sl-tasks { margin-top: 5px; }
+.sl-plans.n4 .sl-tasks span { font-size: 13px; padding: 3px 10px; }
+.sl-plans.n4 + .sl-src { margin-top: 10px; }

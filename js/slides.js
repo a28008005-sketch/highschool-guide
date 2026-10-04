@@ -116,11 +116,11 @@
       const subj = st.subject || '영어';
       add('plan', `
         <div class="sl-head"><span class="sl-tag">학교 평가계획에서 본 것</span><h2>학교마다 ${esc(subj)} 시험 구조가 다릅니다</h2></div>
-        <div class="sl-plans">${planned.slice(0, 4).map(s => planRow(s, notes(s.id))).join('')}</div>
+        <div class="sl-plans n${Math.min(4, planned.length)}">${planned.slice(0, 4).map(s => planRow(s, notes(s.id))).join('')}</div>
         <p class="sl-src">${esc(notes(planned[0].id).plan.src || '학교알리미 공시 「교과별 교수·학습 및 평가계획」')}</p>`,
         `학교가 공개한 평가계획을 보겠습니다. ` + planned.map(s => {
           const p = notes(s.id).plan, ts = HS.planTasks(notes(s.id));
-          return `${J(short(s.name), '은/는')} 정기시험 ${(+p.w1 || 0) + (+p.w2 || 0)}%, 수행평가 ${p.perf || 0}%이고${p.essay ? `, 시험 문항의 ${p.essay}%가 서·논술형입니다` : '입니다'}.${ts.length ? ` 수행평가는 ${ts.map(t => t.name).join(', ')}입니다.` : ''}`;
+          return `${J(short(s.name), '은/는')} 정기시험 ${(+p.w1 || 0) + (+p.w2 || 0)}%, 수행평가 ${p.perf || 0}%이고${p.essay ? `, 시험 배점의 ${p.essay}%가 서·논술형입니다` : '입니다'}.${ts.length ? ` 수행평가는 ${ts.map(t => t.name).join(', ')}입니다.` : ''}`;
         }).join(' ') + ' 같은 영어라도 준비해야 할 것이 학교마다 다릅니다.');
     }
 
@@ -178,7 +178,7 @@
     const seg = (w, cls, label) => (w ? `<i class="${cls}" style="flex:${w}"><b>${label}</b> ${w}%</i>` : '');
     const ts = HS.planTasks(n);
     return `<div class="sl-plan">
-      <div class="sl-plan-h"><strong>${esc(short(s.name))}</strong>${p.essay ? `<span class="sl-essay">시험 중 서·논술 <b>${esc(p.essay)}%</b></span>` : ''}</div>
+      <div class="sl-plan-h"><strong>${esc(short(s.name))}</strong>${p.essay ? `<span class="sl-essay">시험 중 서·논술 <b>${esc(p.essay)}%</b></span>` : ''}${p.when ? `<span class="sl-when">${esc(p.when)}</span>` : ''}</div>
       <div class="sl-stack">${seg(w1, 'e1', '1차 시험')}${seg(w2, 'e2', '2차 시험')}${seg(pf, 'pf', '수행')}</div>
       ${ts.length ? `<div class="sl-tasks">${ts.map(t => `<span>${esc(t.name)}${t.w ? ` <b>${esc(t.w)}%</b>` : ''}${t.how ? ` · ${esc(t.how)}` : ''}</span>`).join('')}</div>` : ''}
     </div>`;
