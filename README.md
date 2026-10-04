@@ -44,3 +44,5 @@ node serve.mjs
 ## 배포
 
 GitHub Pages(브랜치 `main`, 폴더 `/ (root)`)로 배포합니다. 빌드 단계가 없는 정적 사이트입니다.
+
+사이트: https://a28008005-sketch.github.io/highschool-guide/
