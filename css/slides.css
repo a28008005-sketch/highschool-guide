@@ -1,0 +1,110 @@
+/* 설명회 슬라이드 — 1280×720 고정 판에 그리고, 보여 줄 때 --s 로 줄인다.
+   이 파일은 내려받기 HTML 에도 그대로 들어가므로 앱 화면 스타일에 기대지 않는다. */
+.slide {
+  --ink: #1b1b1b;
+  --paper: #fbfaf6;
+  --muted: #8f8a80;
+  --line: #e4e0d6;
+  --dot-off: #e2ded4;
+  --mark: #ffd43b;
+  --green: #2f6f62;
+  --red: #d9573b;
+  --blue: #3d6fb6;
+  box-sizing: border-box;
+  width: 1280px;
+  height: 720px;
+  padding: 44px 72px 36px;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, 'Malgun Gothic', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  text-align: left;
+  overflow: hidden;
+}
+.slide *, .slide *::before, .slide *::after { box-sizing: border-box; }
+.slide.dark { --paper: #1b1b1b; --ink: #fbfaf6; --muted: #9b968c; --dot-off: #3a3a3a; }
+
+.sl-top, .sl-foot { display: flex; justify-content: space-between; font-size: 15px; color: var(--muted); }
+.sl-top span:first-child { color: var(--ink); font-weight: 700; }
+.sl-main { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; padding: 18px 0; }
+.sl-foot { font-size: 13px; }
+
+.sl-title h1 { font-size: 76px; font-weight: 800; line-height: 1.15; margin: 14px 0 22px; letter-spacing: -0.04em; }
+.sl-kicker { font-size: 22px; color: var(--muted); font-weight: 600; }
+.sl-sub { font-size: 28px; color: var(--mark); font-weight: 700; margin: 0 0 18px; max-width: 1000px; }
+.slide:not(.dark) .sl-sub { color: var(--red); }
+.sl-meta { font-size: 20px; color: var(--muted); margin: 0; }
+
+.sl-head { margin-bottom: 26px; }
+.sl-head h2 { font-size: 48px; font-weight: 800; margin: 10px 0 0; letter-spacing: -0.035em; }
+.sl-tag { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--red); }
+.sl-tag::before { content: ''; width: 28px; height: 3px; background: currentColor; }
+.slide mark { background: linear-gradient(transparent 12%, var(--mark) 12%, var(--mark) 92%, transparent 92%); color: inherit; padding: 0 6px; }
+.slide.dark mark { color: #1b1b1b; }
+
+.sl-body { font-size: 22px; color: #555; margin: 12px 0 0; line-height: 1.6; }
+.dark .sl-body { color: #bbb; }
+.sl-body.lg { font-size: 30px; color: var(--ink); font-weight: 600; }
+.sl-big { font-size: 64px; font-weight: 800; line-height: 1.2; margin: 14px 0 6px; letter-spacing: -0.04em; }
+.sl-label { font-size: 18px; font-weight: 700; color: var(--green); margin: 30px 0 12px; }
+
+.sl-split { display: grid; grid-template-columns: 1fr 540px; gap: 40px; align-items: center; }
+.sl-dotbox { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.sl-dotbox .dots { max-height: 470px; width: auto; max-width: 540px; }
+.sl-legend { font-size: 15px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.sl-legend i { width: 12px; height: 12px; border-radius: 50%; background: var(--dot-off); display: inline-block; margin-left: 10px; }
+.sl-legend i.on { background: var(--ink); margin-left: 0; }
+
+.sl-agenda { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; }
+.sl-agenda li { display: flex; gap: 22px; align-items: center; }
+.sl-agenda strong { display: block; font-size: 34px; font-weight: 800; }
+.sl-agenda span { font-size: 20px; color: var(--muted); }
+.slide .num { display: inline-grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--ink); color: var(--paper); font-size: 20px; font-weight: 800; }
+
+.sl-cards { display: grid; gap: 22px; }
+.sl-cards.n1 { grid-template-columns: 1fr; }
+.sl-cards.n2 { grid-template-columns: 1fr 1fr; }
+.sl-cards.n3 { grid-template-columns: 1fr 1fr 1fr; }
+.sl-card { border: 1.5px solid var(--line); border-radius: 18px; padding: 24px 26px; background: #fff; display: flex; flex-direction: column; gap: 14px; }
+.sl-card-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.sl-card-h strong { font-size: 26px; font-weight: 800; }
+.sl-card-h span { font-size: 15px; color: var(--muted); }
+.sl-card-k { font-size: 18px; color: #555; }
+.sl-card-k b { font-size: 40px; font-weight: 800; color: var(--ink); margin-right: 4px; }
+.sl-card .dots { width: 100%; height: auto; max-height: 200px; }
+.sl-bar { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; font-size: 14px; color: var(--muted); align-items: center; }
+.sl-bar .track { grid-column: 1; height: 10px; border-radius: 6px; background: var(--line); overflow: hidden; }
+.sl-bar .track i { display: block; height: 100%; background: var(--red); }
+.sl-bar b { grid-row: 1 / span 2; grid-column: 2; font-size: 26px; color: var(--red); }
+.sl-alt { font-size: 18px; padding: 14px 16px; background: #f5f2ea; border-radius: 12px; line-height: 1.5; }
+.sl-alt span { display: block; font-size: 14px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+
+.sl-policy { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: center; gap: 18px; }
+.sl-policy > div:not(.arrow) { display: flex; flex-direction: column; gap: 12px; }
+.sl-policy span { font-size: 17px; color: var(--muted); font-weight: 600; }
+.sl-policy b { font-size: 44px; font-weight: 800; }
+.sl-policy .dots { width: 100%; max-height: 250px; height: auto; }
+.sl-policy .arrow { font-size: 48px; color: var(--muted); text-align: center; }
+
+.sl-grade5 { display: flex; gap: 4px; margin-top: 26px; border-radius: 10px; overflow: hidden; }
+.sl-grade5 div { padding: 12px 14px; background: #ece8de; display: flex; flex-direction: column; font-size: 14px; color: #555; }
+.sl-grade5 b { font-size: 17px; color: #1b1b1b; }
+.sl-grade5 .g1 { background: #2f6f62; color: #d9ebe6; }
+.sl-grade5 .g1 b { color: #fff; }
+.sl-grade5 .g2 { background: #8fbcb1; }
+.sl-grade5.small div { padding: 6px 8px; font-size: 11px; }
+.sl-grade5.small b { font-size: 12px; }
+
+.sl-actions { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.sl-actions li { display: flex; gap: 16px; align-items: center; font-size: 26px; font-weight: 600; }
+.sl-actions .num { background: var(--green); width: 36px; height: 36px; font-size: 18px; }
+
+.sl-table { width: 100%; border-collapse: collapse; font-size: 22px; }
+.sl-table th { text-align: left; font-size: 15px; color: var(--muted); font-weight: 600; padding: 8px 12px; border-bottom: 2px solid var(--ink); }
+.sl-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); }
+.sl-table td:first-child { font-weight: 700; }
+.sl-table b { font-size: 26px; }
+.sl-table th:not(:first-child), .sl-table td:not(:first-child) { text-align: right; }

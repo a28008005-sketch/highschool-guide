@@ -1,0 +1,6 @@
+# 원본 녹화 영상은 올리지 않는다 (용량이 크고 강의 저작물이다)
+*.mp4
+*.mov
+node_modules/
+.DS_Store
+Thumbs.db
