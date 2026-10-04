@@ -58,6 +58,7 @@ for (const [code, regionName] of REGIONS) {
       tel: info.USER_TELNO || '',
       web: info.HMPG_ADRES || '',
       lat: info.LTTUD || null, lng: info.LGTUD || null,
+      sid: info.SHL_IDF_CD || '',                       // 학교알리미 학교별 공시 페이지 키
     });
   }
   console.log(code, counts.length);

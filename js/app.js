@@ -146,6 +146,7 @@
       <div class="card-sub">${esc([s.sigungu, s.fond, s.coed === '공학' ? '남녀공학' : s.coed ? s.coed + '학교' : '', typeLabel(s.type)].filter(Boolean).join(' · '))}</div>
       <div class="card-k"><b>${k}</b><span>명<br>1등급 자리</span>
         <div class="card-g1">1학년 <b>${s.g1}</b>명${s.c1 ? `<br>${s.c1}학급 · 학급당 ${(s.g1 / s.c1).toFixed(1)}명` : ''}</div></div>
+      ${s.sid ? `<a class="card-link" href="${HS.infoUrl(s)}" target="_blank" rel="noopener">학교알리미 공시 · 평가계획 ↗</a>` : ''}
       <div class="mini">${[['1', s.g1], ['2', s.g2], ['3', s.g3]].map(([g, v]) => `<div><span>${g}학년</span><i style="width:${(v / max) * 100}%"></i><b>${v || '-'}</b></div>`).join('')}</div>
     </article>`;
   }
@@ -182,7 +183,8 @@
           <label class="fld"><span>이 학교를 쓴다면</span><input class="input" data-n="ifThis" value="${esc(n.ifThis)}" placeholder="서술형 훈련을 겨울방학에 먼저 시작합니다"></label>
           <label class="fld"><span>다른 학교라면</span><input class="input" data-n="ifOther" value="${esc(n.ifOther)}" placeholder="어휘량을 먼저 끌어올립니다"></label>
         </div>
-        <div class="lbl">평가계획 <span class="muted">학교알리미 → 학교별 공시 → 「교과별(학년별) 교수·학습 및 평가계획」 1학년 1학기 파일</span></div>
+        <div class="lbl">평가계획 <span class="muted">학교알리미 → 「교과별(학년별) 교수·학습 및 평가계획」 → 1학년 1학기 파일의 ${esc(state.settings.subject || '영어')} 쪽 ‘평가의 종류와 반영비율’ 표</span></div>
+        ${s.sid ? `<a class="btn small plan-open" href="${HS.infoUrl(s)}" target="_blank" rel="noopener">${esc(short(s.name))} 학교알리미 공시 열기 ↗</a>` : ''}
         <div class="grid4">
           ${pfld('w1', '1차 시험 반영 (%)', '30')}
           ${pfld('w2', '2차 시험 반영 (%)', '30')}

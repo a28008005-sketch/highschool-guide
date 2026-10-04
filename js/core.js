@@ -74,6 +74,8 @@
     if (!n.plan) n.plan = { w1: '', w2: '', perf: '', essay: '', tasks: [{ name: '', w: '', how: '' }], src: '' };
     return n;
   };
+  // 학교알리미 학교별 공시 페이지 — 「교과별(학년별) 교수·학습 및 평가계획」 이 여기 있다
+  HS.infoUrl = s => (s && s.sid ? `https://www.schoolinfo.go.kr/ei/ss/Pneiss_b01_s0.do?SHL_IDF_CD=${s.sid}` : '');
   HS.hasExam = n => n && n.type && n.value;
   HS.hasPlan = n => !!(n && n.plan && (+n.plan.w1 || +n.plan.perf));
   HS.planTasks = n => ((n && n.plan && n.plan.tasks) || []).filter(t => t.name);

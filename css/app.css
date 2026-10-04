@@ -310,3 +310,6 @@ dialog::backdrop { background: rgba(0,0,0,.4); }
 .ho-g5 h3 { margin-top: 2px; }
 .ho-g5 p { margin: 6px 0 0; }
 .ho-g5 .sl-grade5 div { white-space: nowrap; padding: 5px 6px; }
+.card-link { font-size: 11px; color: #3d6fb6; text-decoration: none; font-weight: 600; }
+.card-link:hover { text-decoration: underline; }
+.plan-open { margin-bottom: 4px; text-decoration: none; color: #3d6fb6; }
