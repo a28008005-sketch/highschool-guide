@@ -77,13 +77,13 @@
     if (known && !+n.plan.w1 && !+n.plan.perf) {
       n.plan = {
         w1: String(known.w1), w2: String(known.w2), perf: String(known.perf), essay: String(known.essay || ''),
-        when: known.when || '', note: known.note || '',
+        when: known.when || '', note: known.note || '', essayLabel: known.essayLabel || '',
         tasks: known.tasks.map(([name, w, how]) => ({ name, w: String(w), how })),
         src: PLANS.src,
       };
       if (!n.type && !n.value) {
         n.subject = PLANS.subject;
-        n.type = '서·논술형';
+        n.type = known.essayLabel || '서·논술형';
         n.value = known.essay + '%';
         n.when = '1학기 정기시험';
       }
