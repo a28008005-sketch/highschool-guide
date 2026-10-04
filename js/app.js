@@ -131,6 +131,7 @@
           : '<p class="empty">왼쪽 카드에서 <b>+ 담기</b>를 눌러 설명회에서 다룰 학교를 고르세요. 2~4곳을 권합니다.</p>'}
         <button type="button" class="btn primary block" data-act="go" data-v="notes" ${ps.length ? '' : 'disabled'}>해설 입력으로 →</button>
         <p class="hint">첫 번째 학교가 슬라이드의 주인공이 됩니다. ↑ 로 순서를 바꾸세요.</p>
+        ${window.DEMO_STATE ? `<button type="button" class="btn small ghost block" data-act="demo">예시 불러오기 · 진주 3개교 평가계획 분석</button>` : ''}
       </aside>
     </div>`;
   }
@@ -157,6 +158,7 @@
     const s = HS.byId(state, state.activeNote);
     const n = HS.note(state, s.id);
     const fld = (k, label, ph, type = 'text') => `<label class="fld"><span>${label}</span><input class="input" type="${type}" data-n="${k}" value="${esc(n[k])}" placeholder="${esc(ph)}"></label>`;
+    const pfld = (k, label, ph) => `<label class="fld"><span>${label}</span><input class="input" type="number" data-p="${k}" value="${esc(n.plan[k])}" placeholder="${esc(ph)}"></label>`;
     return `
     <div class="tabs">${ps.map(x => `<button type="button" class="tab ${x.id === s.id ? 'on' : ''}" data-act="note" data-id="${x.id}">${esc(short(x.name))}${HS.hasExam(state.notes[x.id]) ? ' <i class="dot-ok"></i>' : ''}</button>`).join('')}</div>
     <div class="notes">
@@ -180,6 +182,23 @@
           <label class="fld"><span>이 학교를 쓴다면</span><input class="input" data-n="ifThis" value="${esc(n.ifThis)}" placeholder="서술형 훈련을 겨울방학에 먼저 시작합니다"></label>
           <label class="fld"><span>다른 학교라면</span><input class="input" data-n="ifOther" value="${esc(n.ifOther)}" placeholder="어휘량을 먼저 끌어올립니다"></label>
         </div>
+        <div class="lbl">평가계획 <span class="muted">학교알리미 → 학교별 공시 → 「교과별(학년별) 교수·학습 및 평가계획」 1학년 1학기 파일</span></div>
+        <div class="grid4">
+          ${pfld('w1', '1차 시험 반영 (%)', '30')}
+          ${pfld('w2', '2차 시험 반영 (%)', '30')}
+          ${pfld('perf', '수행평가 반영 (%)', '40')}
+          ${pfld('essay', '시험 중 서·논술 (%)', '40')}
+        </div>
+        <div class="fld"><span>수행평가 과제</span></div>
+        <div class="actions-list">${n.plan.tasks.map((t, i) => `
+          <div class="task-row">
+            <input class="input" data-t="${i}:name" value="${esc(t.name)}" placeholder="${['기사문 읽고 요약문 쓰기', '영어 말하기 발표', '읽기 포트폴리오'][i] || '과제 이름'}">
+            <input class="input" data-t="${i}:w" value="${esc(t.w)}" placeholder="비율 %" type="number">
+            <input class="input" data-t="${i}:how" value="${esc(t.how)}" placeholder="방법 (서술·논술, 구술발표 …)">
+            ${i ? `<button type="button" class="x" data-act="delTask" data-i="${i}" aria-label="삭제">×</button>` : '<span></span>'}
+          </div>`).join('')}</div>
+        <button type="button" class="btn small ghost" data-act="addTask">+ 수행평가 과제 추가</button>
+        <label class="fld"><span>출처</span><input class="input" data-p="src" value="${esc(n.plan.src)}" placeholder="학교알리미 공시 「교과별 교수·학습 및 평가계획」 2026 1학기 1학년 공통영어1"></label>
         <div class="lbl">공시 보충 <span class="muted">학교알리미 학교별 공시에서 보고 적으면 비교·표에 나옵니다 (선택)</span></div>
         <div class="grid2">
           ${fld('engA', (state.settings.subject || '영어') + ' 성취도 A 비율 (%)', '24.6', 'number')}
@@ -204,6 +223,7 @@
       ${box('red', '그래서', esc(then), '‘그래서 어떻게 되나’를 채워 주세요.')}
       ${box('green', '대책', acts.map((t, i) => `${i + 1}. ${esc(HS.end(t))}`).join('<br>'), '대책을 채우면 학부모가 안심할 문장이 나옵니다.')}
       ${box('yellow', '대안', [n.ifThis && `이 학교라면 — ${esc(HS.end(n.ifThis))}`, n.ifOther && `다른 학교라면 — ${esc(HS.end(n.ifOther))}`].filter(Boolean).join('<br>'), '어느 쪽을 골라도 할 일이 있다는 걸 보여 줍니다.')}
+      <div class="say plan-prev ${HS.hasPlan(n) ? '' : 'empty'}"><span class="say-tag">평가 구조</span>${HS.hasPlan(n) ? HS.planRow(s, n) : '<p>평가계획 반영비율을 채우면 막대 그림이 나옵니다.</p>'}</div>
       <p class="hint">한 번 적어 둔 해설은 내년 설명회에도 그대로 다시 씁니다. 학교가 평가계획을 바꾸면 그 부분만 고치세요.</p>`;
   }
 
@@ -329,6 +349,10 @@
         <div class="legend">${legend}</div>
         ${HS.tableHtml(ps, id => state.notes[id] || {}, state.settings, 'tbl')}
       </section>
+      ${ps.some(s => HS.hasPlan(state.notes[s.id])) ? `<section class="panel wide">
+        <div class="panel-h"><h3>${esc(state.settings.subject || '영어')} 평가 구조</h3><span class="muted">학교알리미 「교과별 교수·학습 및 평가계획」 공시</span></div>
+        <div class="sl-plans app">${ps.filter(s => HS.hasPlan(state.notes[s.id])).map(s => HS.planRow(s, state.notes[s.id])).join('')}</div>
+      </section>` : ''}
     </div>`;
   }
 
@@ -370,18 +394,21 @@
       <div class="ho-top"><span>${esc(st.academy)}</span><span>${esc(st.date)}</span></div>
       <h1>${esc(st.title)}</h1>
       <h2>학교마다 1등급 자리 수가 다릅니다.<br>${head}</h2>
-      ${a ? `<div class="ho-dots"><span class="muted">${esc(short(a.name))} 1학년 ${a.g1}명 가운데 1등급이 되는 ${seat(a.g1)}명</span>${dots(a.g1, seat(a.g1), { size: 7, gap: 3, cols: 40, width: 420 })}</div>` : ''}
+      <div class="ho-row">
+        ${a ? `<div class="ho-dots"><span class="muted">${esc(short(a.name))} 1학년 ${a.g1}명 가운데 1등급이 되는 ${seat(a.g1)}명</span>${dots(a.g1, seat(a.g1), { size: 6, gap: 3, cols: 32, width: 300 })}</div>` : ''}
+        <div class="ho-g5"><h3>지금 중3부터 내신이 5등급으로 바뀝니다</h3>
+          <div class="sl-grade5 small">${HS.GRADE5.map((p, i) => `<div style="flex:${p}" class="g${i + 1}"><b>${i + 1}등급</b><span>${p}%</span></div>`).join('')}</div>
+          <p class="small">1등급이 상위 4%에서 10%로 늘었습니다.${a ? ` 예전 기준이면 ${HS.josa(short(a.name), '은/는')} ${seatOld(a.g1)}명, 지금은 ${seat(a.g1)}명입니다.` : ''}</p></div>
+      </div>
       <h3>오늘 다룬 학교</h3>
       ${HS.tableHtml(ps, notes, st, 'tbl ho-tbl')}
       <p class="muted small">학교알리미 공시 ${esc(HS.dataYear)}년 기준. 1등급 자리는 학년 정원의 10%로 계산했습니다.</p>
-      <h3>지금 중3부터 내신이 5등급으로 바뀝니다</h3>
-      <div class="sl-grade5 small">${HS.GRADE5.map((p, i) => `<div style="flex:${p}" class="g${i + 1}"><b>${i + 1}등급</b><span>${p}%</span></div>`).join('')}</div>
-      <p class="small">1등급이 상위 4%에서 10%로 늘었습니다.${a ? ` 예전 기준이면 ${HS.josa(short(a.name), '은/는')} ${seatOld(a.g1)}명, 지금은 ${seat(a.g1)}명입니다.` : ''}</p>
-      ${exams.length ? `<h3>학교별로 미리 준비할 것</h3>${exams.map(s => {
+      ${ps.some(s => HS.hasPlan(notes(s.id))) ? `<h3>학교마다 ${esc(st.subject || '영어')} 시험 구조가 다릅니다</h3><div class="sl-plans ho">${ps.filter(s => HS.hasPlan(notes(s.id))).map(s => HS.planRow(s, notes(s.id))).join('')}</div>` : ''}
+      ${exams.length ? `<h3>학교별로 미리 준비할 것</h3><div class="ho-exams n${Math.min(3, exams.length)}">${exams.map(s => {
         const n = notes(s.id);
         const acts = (n.actions || []).filter(Boolean);
         return `<div class="ho-exam"><strong>${esc(HS.examLine(s, n))}</strong>${n.then ? `<p>${esc(HS.thenLine(n))}</p>` : ''}${acts.length ? `<ul>${acts.map(t => `<li>${esc(HS.end(t))}</li>`).join('')}</ul>` : ''}</div>`;
-      }).join('')}` : ''}
+      }).join('')}</div>` : ''}
       <div class="ho-cta"><strong>개별 상담은 한 가정당 10분입니다</strong><span>${esc(st.academy)}${st.phone ? ' · ' + esc(st.phone) : ''}</span></div>
     </article>`;
   }
@@ -526,6 +553,12 @@ body{background:#E9E6DF}.handout-wrap{padding:24px 0}.printbtn{position:fixed;ri
       }
       case 'addAction': HS.note(state, state.activeNote).actions.push(''); break;
       case 'delAction': HS.note(state, state.activeNote).actions.splice(+el.dataset.i, 1); break;
+      case 'addTask': HS.note(state, state.activeNote).plan.tasks.push({ name: '', w: '', how: '' }); break;
+      case 'delTask': HS.note(state, state.activeNote).plan.tasks.splice(+el.dataset.i, 1); break;
+      case 'demo':
+        if (state.picked.length && !confirm('지금 고른 학교와 해설을 진주 예시로 바꿀까요?')) return;
+        state = Object.assign(HS.defaults(), JSON.parse(JSON.stringify(window.DEMO_STATE)));
+        break;
       case 'opening': state.copy.opening = v; state.copy.first = 0; break;
       case 'play': return play(+el.dataset.i);
       case 'print': return window.print();
@@ -571,9 +604,12 @@ body{background:#E9E6DF}.handout-wrap{padding:24px 0}.printbtn{position:fixed;ri
       }, 250);
       return;
     }
-    if (el.dataset.n || el.dataset.a) {
+    if (el.dataset.n || el.dataset.a || el.dataset.p || el.dataset.t) {
       const n = HS.note(state, state.activeNote);
-      if (el.dataset.n) n[el.dataset.n] = el.value; else n.actions[+el.dataset.a] = el.value;
+      if (el.dataset.n) n[el.dataset.n] = el.value;
+      else if (el.dataset.a) n.actions[+el.dataset.a] = el.value;
+      else if (el.dataset.p) n.plan[el.dataset.p] = el.value;
+      else { const [i, k] = el.dataset.t.split(':'); n.plan.tasks[+i][k] = el.value; }
       save();
       $('#notePreview').innerHTML = notePreview(HS.byId(state, state.activeNote), n);
     }

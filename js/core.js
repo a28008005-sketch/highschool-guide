@@ -69,9 +69,14 @@
         then: '', actions: [''], ifThis: '', ifOther: '', engA: '', univ: '',
       };
     }
-    return state.notes[id];
+    const n = state.notes[id];
+    // 평가계획(학교알리미 「교과별 교수·학습 및 평가계획」 공시) — 나중에 생긴 칸이라 따로 채운다
+    if (!n.plan) n.plan = { w1: '', w2: '', perf: '', essay: '', tasks: [{ name: '', w: '', how: '' }], src: '' };
+    return n;
   };
   HS.hasExam = n => n && n.type && n.value;
+  HS.hasPlan = n => !!(n && n.plan && (+n.plan.w1 || +n.plan.perf));
+  HS.planTasks = n => ((n && n.plan && n.plan.tasks) || []).filter(t => t.name);
 
   // ── 한국어 조사 ───────────────────────────────────────────────
   HS.josa = (word, pair) => {

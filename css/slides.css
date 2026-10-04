@@ -108,3 +108,20 @@
 .sl-table td:first-child { font-weight: 700; }
 .sl-table b { font-size: 26px; }
 .sl-table th:not(:first-child), .sl-table td:not(:first-child) { text-align: right; }
+
+/* 학교별 평가 구조 */
+.sl-plans { display: flex; flex-direction: column; gap: 22px; }
+.sl-plan-h { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+.sl-plan-h strong { font-size: 26px; font-weight: 800; }
+.sl-essay { font-size: 17px; color: var(--red); font-weight: 600; }
+.sl-essay b { font-size: 22px; }
+.sl-stack { display: flex; height: 44px; border-radius: 10px; overflow: hidden; gap: 3px; }
+.sl-stack i { display: flex; align-items: center; justify-content: center; gap: 6px; font-style: normal; font-size: 16px; color: #fff; white-space: nowrap; }
+.sl-stack i b { font-weight: 700; }
+.sl-stack .e1 { background: var(--green); }
+.sl-stack .e2 { background: #4f8f81; }
+.sl-stack .pf { background: var(--red); }
+.sl-tasks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.sl-tasks span { font-size: 15px; padding: 5px 12px; border-radius: 99px; background: #fbe9e4; color: #8a3520; }
+.sl-tasks b { font-weight: 800; }
+.sl-src { font-size: 13px; color: var(--muted); margin: 18px 0 0; }

@@ -10,6 +10,7 @@
     { kind: 'dots', label: '1학년 수 · 1등급 자리', tone: 'green' },
     { kind: 'compare', label: '같은 아이, 다른 학교', tone: 'green' },
     { kind: 'policy', label: '5등급제 변화', tone: 'blue' },
+    { kind: 'plan', label: '학교별 평가 구조', tone: 'red' },
     { kind: 'exam', label: '학교별 시험 특징', tone: 'red' },
     { kind: 'table', label: '학교별 1등급 자리 표', tone: '' },
     { kind: 'decide', label: '지금 정할 것', tone: 'yellow' },
@@ -109,6 +110,20 @@
         `그런데 좋은 소식이 있습니다. 지금 중3부터 내신이 5등급으로 바뀝니다. 1등급이 상위 4%에서 10%로 늘었습니다. 예전 기준이면 ${A} 1등급은 ${o}명이었지만, 지금은 ${s1}명입니다.`);
     }
 
+    // 6-0. 학교별 평가 구조 (평가계획 공시)
+    const planned = ps.filter(s => HS.hasPlan(notes(s.id)));
+    if (planned.length) {
+      const subj = st.subject || '영어';
+      add('plan', `
+        <div class="sl-head"><span class="sl-tag">학교 평가계획에서 본 것</span><h2>학교마다 ${esc(subj)} 시험 구조가 다릅니다</h2></div>
+        <div class="sl-plans">${planned.slice(0, 4).map(s => planRow(s, notes(s.id))).join('')}</div>
+        <p class="sl-src">${esc(notes(planned[0].id).plan.src || '학교알리미 공시 「교과별 교수·학습 및 평가계획」')}</p>`,
+        `학교가 공개한 평가계획을 보겠습니다. ` + planned.map(s => {
+          const p = notes(s.id).plan, ts = HS.planTasks(notes(s.id));
+          return `${J(short(s.name), '은/는')} 정기시험 ${(+p.w1 || 0) + (+p.w2 || 0)}%, 수행평가 ${p.perf || 0}%이고${p.essay ? `, 시험 문항의 ${p.essay}%가 서·논술형입니다` : '입니다'}.${ts.length ? ` 수행평가는 ${ts.map(t => t.name).join(', ')}입니다.` : ''}`;
+        }).join(' ') + ' 같은 영어라도 준비해야 할 것이 학교마다 다릅니다.');
+    }
+
     // 6. 학교별 시험 특징
     ps.filter(s => HS.hasExam(notes(s.id))).forEach(s => {
       const n = notes(s.id);
@@ -157,6 +172,18 @@
 
     return out;
   };
+
+  function planRow(s, n) {
+    const p = n.plan, w1 = +p.w1 || 0, w2 = +p.w2 || 0, pf = +p.perf || 0;
+    const seg = (w, cls, label) => (w ? `<i class="${cls}" style="flex:${w}"><b>${label}</b> ${w}%</i>` : '');
+    const ts = HS.planTasks(n);
+    return `<div class="sl-plan">
+      <div class="sl-plan-h"><strong>${esc(short(s.name))}</strong>${p.essay ? `<span class="sl-essay">시험 중 서·논술 <b>${esc(p.essay)}%</b></span>` : ''}</div>
+      <div class="sl-stack">${seg(w1, 'e1', '1차 시험')}${seg(w2, 'e2', '2차 시험')}${seg(pf, 'pf', '수행')}</div>
+      ${ts.length ? `<div class="sl-tasks">${ts.map(t => `<span>${esc(t.name)}${t.w ? ` <b>${esc(t.w)}%</b>` : ''}${t.how ? ` · ${esc(t.how)}` : ''}</span>`).join('')}</div>` : ''}
+    </div>`;
+  }
+  HS.planRow = planRow;
 
   function tableHtml(ps, notes, st, cls) {
     const anyEng = ps.some(s => notes(s.id).engA !== '' && notes(s.id).engA != null);
